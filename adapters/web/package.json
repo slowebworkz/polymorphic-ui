@@ -43,10 +43,9 @@
   },
   "license": "MIT",
   "author": "K Huehn <slowebworkz@gmail.com>",
-  "description": "Praxis Kit vanilla Custom Elements adapter — framework-free polymorphic components with ARIA contracts",
+  "description": "Praxis Kit vanilla Custom Elements adapter — framework-free Custom Elements with Praxis styling, ARIA contracts, and structural child validation",
   "keywords": [
     "praxis-kit",
-    "polymorphic",
     "ui",
     "components",
     "accessibility",

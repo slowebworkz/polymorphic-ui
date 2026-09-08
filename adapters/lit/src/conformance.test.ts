@@ -2,11 +2,12 @@
 //
 // Known limitations vs other adapters (documented, not bugs):
 //
-//   1. Tag rendering: custom elements have a fixed tag set at define()-time.
-//      The `options.tag` drives ARIA inference only — the rendered element tag
-//      is always the custom element name. Tests "renders default tag",
-//      "respects a custom tag option", "renders a different tag via as prop",
-//      and "switches rendered tag on rerender with a new as prop" will fail.
+//   1. Tag rendering: custom elements have a fixed tag set at define()-time, and this adapter has
+//      no `as` prop at all (see createContractComponent's doc comment) — `as` is filtered out of
+//      the pipeline unconditionally, on both the DOM and SSR paths, rather than left to silently
+//      reinterpret ARIA/content-model semantics for a tag the element will never actually be.
+//      Tests "renders default tag", "respects a custom tag option", "renders a different tag via
+//      as prop", and "switches rendered tag on rerender with a new as prop" will fail.
 //
 //   2. Variant key stripping: Lit's reactive property system keeps variant
 //      attributes on the host as DOM attributes. In React/Vue they never reach

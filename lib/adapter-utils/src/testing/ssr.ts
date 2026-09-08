@@ -15,6 +15,24 @@ import { silentDiagnostics } from '@praxis-kit/diagnostics'
 export type SsrConformanceAdapter<C extends ConformanceComponent = ConformanceComponent> = {
   createComponent(options: ConformanceFactoryOptions): C
   renderToString(component: C, props?: AnyRecord): string | Promise<string>
+  /**
+   * Declare which optional behavioral contracts this adapter's SSR path satisfies. Mirrors
+   * `ConformanceAdapter.capabilities` (`./conformance.ts`) — kept as its own, narrower field here
+   * rather than sharing that type directly, since the DOM suite's `asChild`/`domPropFiltering`
+   * capabilities have no SSR-path equivalent to gate.
+   */
+  capabilities?: {
+    /**
+     * false for adapters where the rendered element tag is fixed at registration time (e.g. Lit/
+     * Web custom elements) — the same constraint `ConformanceAdapter.capabilities.tagPolymorphism`
+     * documents for the DOM suite, but SSR has no live element to constrain it the way the DOM
+     * path does: without this gate, an SSR-only adapter could render whatever tag `as` names as a
+     * literal string wrapper even though the real component can never structurally become that
+     * tag, producing markup the live client would never itself produce. Skips the SSR test
+     * asserting `as` changes the rendered tag.
+     */
+    tagPolymorphism?: boolean
+  }
 }
 
 /**
@@ -26,6 +44,8 @@ export type SsrConformanceAdapter<C extends ConformanceComponent = ConformanceCo
 export function ssrConformanceSuite<C extends ConformanceComponent = ConformanceComponent>(
   adapter: SsrConformanceAdapter<C>,
 ): void {
+  const caps = { tagPolymorphism: true, ...adapter.capabilities }
+
   // ── basic rendering ─────────────────────────────────────────────────────────
 
   describe('ssr — basic rendering', () => {
@@ -51,12 +71,13 @@ export function ssrConformanceSuite<C extends ConformanceComponent = Conformance
       expect(html).toMatch(/<nav[\s>]/)
     })
 
-    it('as prop overrides the default tag', async () => {
-      const Box = adapter.createComponent({ enforcement: { diagnostics: silentDiagnostics } })
-      const html = await adapter.renderToString(Box, { as: 'section' })
-      expect(html).toMatch(/<section[\s>]/)
-      expect(html).not.toMatch(/<div[\s>]/)
-    })
+    if (caps.tagPolymorphism)
+      it('as prop overrides the default tag', async () => {
+        const Box = adapter.createComponent({ enforcement: { diagnostics: silentDiagnostics } })
+        const html = await adapter.renderToString(Box, { as: 'section' })
+        expect(html).toMatch(/<section[\s>]/)
+        expect(html).not.toMatch(/<div[\s>]/)
+      })
   })
 
   // ── class output ─────────────────────────────────────────────────────────────
