@@ -256,6 +256,9 @@ importers:
       '@praxis-kit/adapter-utils':
         specifier: workspace:*
         version: link:../../lib/adapter-utils
+      '@praxis-kit/contract-props':
+        specifier: workspace:*
+        version: link:../../lib/contract-props
       '@praxis-kit/core':
         specifier: workspace:*
         version: link:../../packages/core

@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@praxis-kit/adapter-utils": "workspace:*",
+    "@praxis-kit/contract-props": "workspace:*",
     "@praxis-kit/diagnostics": "workspace:*",
     "@praxis-kit/primitive": "workspace:*",
     "jsdom": "catalog:",
@@ -47,10 +48,9 @@
   },
   "license": "MIT",
   "author": "K Huehn <slowebworkz@gmail.com>",
-  "description": "Praxis Kit adapter for Lit — polymorphic custom elements with ARIA contracts and variant composition",
+  "description": "Praxis Kit adapter for Lit — Custom Elements with Praxis styling, ARIA contracts, and structural child validation",
   "keywords": [
     "praxis-kit",
-    "polymorphic",
     "ui",
     "components",
     "accessibility",

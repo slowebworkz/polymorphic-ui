@@ -13,16 +13,21 @@ export type ResolvedAttributes = AnyRecord
  *
  * Describes the public contract without exposing HTMLElement's internal members.
  * Variant key instance properties are typed via TVariants.
+ *
+ * No `as` field, unlike an earlier design — see the `as` note on
+ * `createContractComponent`'s own doc comment for why: a custom element's tag is
+ * fixed at `customElements.define()` time, so there is no tag for `as` to switch.
  */
 export type WebContractComponent<
   TVariants extends Readonly<VariantMap> = NoVariants,
   TPluginProps extends AnyRecord = EmptyRecord,
 > = {
   new (): HTMLElement & {
-    as: string | undefined
     recipe: string | undefined
     praxisClass: string | undefined
-    /** Re-runs the pipeline — call after setting non-reactive attributes (aria-*, role, data-*). */
+    /** Re-runs the pipeline — call after setting non-reactive attributes (aria-*, role, data-*)
+     *  or a praxis-owned property directly (property assignment doesn't trigger
+     *  attributeChangedCallback — see createContractComponent's own doc comment). */
     update(): void
   } & { [K in Extract<keyof TVariants, string>]?: string | null } & TPluginProps
   /** The resolved diagnostics for this component — usable by subclasses for custom enforcement. */

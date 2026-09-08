@@ -10,3 +10,4 @@ export type {
   UnknownProps,
 } from './primitives'
 export type { LitConformanceComponent, LitConformanceEl } from './conformance'
+export type { ContractProps, GenericsOf } from './contract-props'
